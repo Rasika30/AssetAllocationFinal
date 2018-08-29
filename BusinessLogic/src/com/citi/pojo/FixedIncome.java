@@ -8,7 +8,7 @@ public class FixedIncome extends Asset {
 	}
 
 	public FixedIncome( double risk, double reward) {
-		super(2,"Fixed income", risk, reward);
+		super(6,"Fixed income", risk, reward);
 		// TODO Auto-generated constructor stub
 	}
 

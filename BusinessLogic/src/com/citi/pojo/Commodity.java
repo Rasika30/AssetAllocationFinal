@@ -8,7 +8,7 @@ public class Commodity extends Asset {
 	}
 
 	public Commodity( double risk, double reward) {
-		super(3,"Commodity", risk, reward);
+		super(10,"Commodity", risk, reward);
 		// TODO Auto-generated constructor stub
 	}
 
