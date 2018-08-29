@@ -14,9 +14,9 @@ import com.citi.pojo.Tuple;
 
 public class MainClass {
 	
-	public static void DetectTriggerResponse(String emailId){
+	public static void DetectTriggerResponse(Long clientId){
 		UserMappingDAO userMappingDao=new UserMappingDAO();
-		long clientId=userMappingDao.getClientId(emailId);
+//		long clientId=userMappingDao.getClientId(long1);
 		AssetDAO assetDAO=new AssetDAO();
 		List<Asset> assets=assetDAO.retrieveAssetDetails();
 		ClientDAO clientDAO=new ClientDAO();
@@ -26,10 +26,10 @@ public class MainClass {
 		RecordRiskRewardDAO recordRiskRewardDAO=new RecordRiskRewardDAO();
 		int result=recordRiskRewardDAO.storeRiskReward(clientId, risk, reward);
 		double PresentValue=Operations.calculateA(clientResponse, reward);
-		List<Tuple<Long, Boolean>> ans=Operations.goalsMet(PresentValue, reward, clientResponse.getGoals());
-		Tuple<Long, List<Tuple<Long, Boolean>>> lists=new Tuple<Long, List<Tuple<Long,Boolean>>>(clientResponse.getClientId(),ans );
-		ClientGoalDAO clientGoalDAO=new ClientGoalDAO();
-		clientGoalDAO.updateGoalsMet(lists);
+		//List<Tuple<Long, Boolean>> ans=Operations.goalsMet(PresentValue, reward, clientResponse.getGoals());
+		//Tuple<Long, List<Tuple<Long, Boolean>>> lists=new Tuple<Long, List<Tuple<Long,Boolean>>>(clientResponse.getClientId(),ans );
+		//ClientGoalDAO clientGoalDAO=new ClientGoalDAO();
+		//clientGoalDAO.updateGoalsMet(lists);
 		
 	}
 
