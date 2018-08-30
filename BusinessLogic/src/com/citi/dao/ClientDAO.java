@@ -9,6 +9,7 @@ public class ClientDAO {
 		ClientResponseDAO clientResponseDao=new ClientResponseDAO();
 		ClientResponse clientResponse=new ClientResponse();
 		List<Question> questions=clientResponseDao.fetchResponses(clientId);
+		System.out.println(questions.size());
 		List<ClientGoal> goals=clientGoalDao.fetchGoals(clientId);
 		clientResponse=new ClientResponse(clientId, questions,goals );
 		return clientResponse;

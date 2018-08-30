@@ -54,9 +54,9 @@ public class TestOperations {
 		List<Tuple<Integer,Double>> myAns = Operations.calculateRatio(assets, calculatedRisk, calculatedReward);
 		int z = ans.size();
 		Tuple<Integer,Double> curr;
-//		for(Tuple<Integer,Double> t:myAns){
-//			System.out.println(t.getX()+":"+ t.getY());
-//		}
+		for(Tuple<Integer,Double> t:myAns){
+			System.out.println(t.getX()+":"+ t.getY());
+		}
 		double  actual,expected, delta;
 		delta = 0.05;
 		Map<Integer,Double> myMap = myAns.stream().collect(Collectors.toMap(tuple -> tuple.getX(),tuple -> tuple.getY()));
@@ -100,7 +100,7 @@ public class TestOperations {
 	public void testCalculateRiskNegative() {
 		List<Question> questions=new ArrayList<>();
 		for(int i=0;i<5;i++){
-			questions.add(new Question(i,"a", -1, 1));
+	//		questions.add(new Question(i,"a", -1, 1));
 		}
 		List<Asset> assets=new ArrayList<>();
 		Equity equity=new Equity(3, 3);
@@ -129,7 +129,7 @@ public class TestOperations {
 	public void testCalculateRiskPositive() {
 		List<Question> questions=new ArrayList<>();
 		for(int i=0;i<5;i++){
-			questions.add(new Question(i,"b", 0.5, 1));
+	//		questions.add(new Question(i,"b", 0.5, 1));
 		}
 		List<Asset> assets=new ArrayList<>();
 		Equity equity=new Equity(3, 3);

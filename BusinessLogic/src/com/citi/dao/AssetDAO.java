@@ -25,15 +25,15 @@ public class AssetDAO {
 		ResultSet rs=statement.executeQuery(FIND_ALL_ASSETS);
 		while(rs.next()) {
 			switch(rs.getString("AssetName")) {
-			case "Commodity":
+			case "Cash":
 				Commodity commodity=new Commodity(rs.getDouble("Risk"),rs.getDouble("Reward"));
 				assets.add(commodity);
 				break;
-			case "Equity":
+			case "Equities":
 				Equity equity=new Equity(rs.getDouble("Risk"),rs.getDouble("Reward"));
 				assets.add(equity);
 				break;
-			case "FixedIncome":
+			case "Treasury10":
 				FixedIncome fixedIncome=new FixedIncome(rs.getDouble("Risk"),rs.getDouble("Reward"));
 				assets.add(fixedIncome);
 				break;

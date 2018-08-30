@@ -2,12 +2,14 @@ package com.citi.main;
 
 import java.util.List;
 
+import com.citi.dao.AllocatedAssetResultDAO;
 import com.citi.dao.AssetDAO;
 import com.citi.dao.ClientDAO;
 import com.citi.dao.ClientGoalDAO;
 import com.citi.dao.RecordRiskRewardDAO;
 import com.citi.dao.UserMappingDAO;
 import com.citi.operations.Operations;
+import com.citi.pojo.AllocatedAssetResult;
 import com.citi.pojo.Asset;
 import com.citi.pojo.ClientResponse;
 import com.citi.pojo.Tuple;
@@ -21,14 +23,24 @@ public class MainClass {
 		List<Asset> assets=assetDAO.retrieveAssetDetails();
 		ClientDAO clientDAO=new ClientDAO();
 		ClientResponse clientResponse=clientDAO.retrieveClientResponsesAndGoals(clientId);
-		double risk=Operations.calculateRisk(assets, clientResponse);
-		double reward=Operations.calculateReward(assets, risk, 2);
+		System.out.println(assets.size());
+       double risk=Operations.calculateRisk(assets, clientResponse);
+        // double risk=Operations.riskScaler(0.5, assets);
+		System.out.println(risk);
+		double reward=Operations.calculateReward(assets, risk, 1);
+		System.out.println("reward"+reward);
 		RecordRiskRewardDAO recordRiskRewardDAO=new RecordRiskRewardDAO();
+		AllocatedAssetResult  allocatedAssetResult = new AllocatedAssetResult(clientId,Operations.calculateRatio(assets, risk, reward));
+		System.out.println("allocated asset res:"+allocatedAssetResult.getClientId());
 		int result=recordRiskRewardDAO.storeRiskReward(clientId, risk, reward);
-		double PresentValue=Operations.calculateA(clientResponse, reward);
+		AllocatedAssetResultDAO allocatedAssetResultDAO = new AllocatedAssetResultDAO();
+		int rowsAffected = allocatedAssetResultDAO.storeAllocatedAssets(allocatedAssetResult);
+		System.out.println("result rows"+rowsAffected);
+		//double PresentValue=Operations.calculateA(clientResponse, reward);
+		
 		//List<Tuple<Long, Boolean>> ans=Operations.goalsMet(PresentValue, reward, clientResponse.getGoals());
 		//Tuple<Long, List<Tuple<Long, Boolean>>> lists=new Tuple<Long, List<Tuple<Long,Boolean>>>(clientResponse.getClientId(),ans );
-		//ClientGoalDAO clientGoalDAO=new ClientGoalDAO();
+	//	ClientGoalDAO clientGoalDAO=new ClientGoalDAO();
 		//clientGoalDAO.updateGoalsMet(lists);
 		
 	}

@@ -30,7 +30,8 @@ public class RiskServiceServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String clientID = request.getParameter("clientID");
+		String clientID = request.getParameter("clientId");
+		System.out.println("myclientid:"+clientID);
 		MainClass.DetectTriggerResponse(Long.valueOf(clientID));
 		response.setContentType("charset=UTF-8");
 		PrintWriter writer = response.getWriter();

@@ -1,4 +1,5 @@
 package com.citi.operations;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
@@ -31,9 +33,14 @@ public class Operations {
 			//degree = 1 straight line etc...
 			for(Asset asset:graphAssetPoints) {
 				obs.add(asset.getRisk(),asset.getReward());
+				System.out.println(asset.getRisk() +": "+asset.getReward());
 			}
-			final PolynomialCurveFitter fitter = PolynomialCurveFitter.create(1);
+			final PolynomialCurveFitter fitter = PolynomialCurveFitter.create(degree);
 			final double[] coeff = fitter.fit(obs.toList());
+			for(double d: coeff) {
+			
+			System.out.println(d);
+			}
 			return new PolynomialFunction(coeff);
 		}
 		public static double calculateReward(List<Asset> assets,double risk,int degree) {
@@ -76,7 +83,15 @@ public class Operations {
 			ArrayList<Double> ratioList = new ArrayList<Double>();
 			assets.forEach(asset -> {risk.add(asset.getRisk()); reward.add(asset.getReward()); ratioList.add(1.0);});
 			Collections.addAll(a,risk,reward,ratioList);
-			return (double[][])a.toArray();
+			List<double []> my =a.stream().map(u -> u.stream().mapToDouble(i -> i).toArray()).collect(Collectors.toList());
+			double [][]b = new double[my.size()][];
+			Iterator iter = my.iterator();
+			int i = 0;
+			while(iter.hasNext()) {
+				b[i] = (double [])iter.next();
+				i = i + 1;
+			}
+			return b;
 		}
 		private static double[] createMatrixB(double calculatedRisk,double calculatedReward,double ratio) {
 			double[] b = new double[3];
@@ -96,6 +111,13 @@ public class Operations {
 //			}
 			NonNegativeLeastSquares leastSquares = solveEquation(eqns, variables, a, b);
 			double[]x  = leastSquares.x;
+			double mysum = 0;
+			for(int i = 0; i < x.length - 1; i++) {
+				DecimalFormat f = new DecimalFormat("##.00");
+				x[i] = Double.valueOf(f.format(x[i]));
+				mysum = mysum + x[i];
+			}
+			x[x.length - 1] =  1.0- mysum;
 //			int [] index = leastSquares.index;
 //			System.out.println(Arrays.toString(index) +"index");
 			List<Tuple<Integer,Double>> allocation = new ArrayList<Tuple<Integer,Double>>();
@@ -169,6 +191,7 @@ public class Operations {
 		public static double calculateRisk(List<Asset> assets,ClientResponse clientResponse){
 			double ans=0;
 			List<Question> questions=clientResponse.getQuestionsResponses();
+			System.out.println(questions.size());
 			double sum=0;
 			for(Question question:questions){
 				if(question.getResponseValue()>0){
@@ -176,13 +199,14 @@ public class Operations {
 				}
 			}
 			
-			double avg=sum/questions.size();
+			//double avg=sum/questions.size();
+			double avg=sum;
 			if(avg==0)
 				return 0;
 			ans=riskScaler(avg,assets);
 			return ans;
 		}
-		private static double riskScaler(double avg,List<Asset> asssets){
+		public static double riskScaler(double avg,List<Asset> asssets){
 			double rMin=Double.MAX_VALUE,rMax=Double.MIN_VALUE;
 		    for(Asset asset:asssets){
 		    	rMin=Math.min(rMin, asset.getRisk());

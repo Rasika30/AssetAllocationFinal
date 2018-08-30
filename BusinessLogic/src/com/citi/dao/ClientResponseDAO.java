@@ -3,6 +3,7 @@ package com.citi.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +16,26 @@ public class ClientResponseDAO {
 		Connection conn=MyConnection.getMyConnection();
 		String FIND_CLIENT_RESPONSES="SELECT ClientResponse.ResponseID,ClientResponse.ResponseOption,ResponseValueToWeightsAllocated.WeightsAllocated FROM ClientResponse INNER JOIN ResponseValueToWeightsAllocated ON ClientResponse.ResponseID = ResponseValueToWeightsAllocated.ResponseID WHERE ClientResponse.ClientID = ?";
 		PreparedStatement preparedStatement;
-		List<Question> questions = new ArrayList<>();
+		List<Question> questions = new ArrayList<Question>();
 		try {
 			preparedStatement = conn.prepareStatement(FIND_CLIENT_RESPONSES);
 			preparedStatement.setLong(1,clientId);
+			System.out.println(clientId);
+//			System.out.println(preparedStatement.);
 			ResultSet rs=preparedStatement.executeQuery();
+			
+			
+			
 			while(rs.next()) { 
 				int responseId; 
 				String response;
 				double responseValue,weightAllocated;
 				responseId=rs.getInt(1);
 				response=rs.getString(2);
-				weightAllocated=rs.getDouble(3);
-				responseValue=retrieveResponseValue(conn,responseId,response);
-				Question question=new Question(responseId,response,responseValue,weightAllocated);
+				responseValue=rs.getDouble(3);
+				System.out.println(responseId+response);
+				weightAllocated=retrieveResponseValue(conn,responseId,response);
+				Question question=new Question(responseId,responseValue,weightAllocated);
 				questions.add(question);
 			}
 		} catch (SQLException e) {
